@@ -8,5 +8,5 @@ namespace WebApplicationNet5.Entities.Post
         public string Name { get; set; }
         public string Slug { get; set; }
         public List<Post> Posts { get; set; }
-    }   
+    }
 }

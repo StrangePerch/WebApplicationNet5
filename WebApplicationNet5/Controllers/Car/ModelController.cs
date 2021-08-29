@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationNet5.Data;
 using WebApplicationNet5.Entities.Car;
@@ -28,17 +25,11 @@ namespace WebApplicationNet5.Controllers.Car
         // GET: Model/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var model = await _context.Models
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (model == null)
-            {
-                return NotFound();
-            }
+            if (model == null) return NotFound();
 
             return View(model);
         }
@@ -62,22 +53,17 @@ namespace WebApplicationNet5.Controllers.Car
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 
         // GET: Model/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var model = await _context.Models.FindAsync(id);
-            if (model == null)
-            {
-                return NotFound();
-            }
+            if (model == null) return NotFound();
             return View(model);
         }
 
@@ -88,10 +74,7 @@ namespace WebApplicationNet5.Controllers.Car
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Model model)
         {
-            if (id != model.Id)
-            {
-                return NotFound();
-            }
+            if (id != model.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +86,31 @@ namespace WebApplicationNet5.Controllers.Car
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ModelExists(model.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 
         // GET: Model/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var model = await _context.Models
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (model == null)
-            {
-                return NotFound();
-            }
+            if (model == null) return NotFound();
 
             return View(model);
         }
 
         // POST: Model/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

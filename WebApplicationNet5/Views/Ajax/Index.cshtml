@@ -1,0 +1,133 @@
+﻿@{
+    ViewData["Title"] = "Ajax Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome Ajax</h1>
+</div>
+
+<main id="main">
+
+</main>
+
+<div id="TeachersContainer">
+    Load...
+</div>
+
+<div id="newTeacher" class="d-flex justify-content-center mt-5">
+    <div class="input-group mb-3 w-50">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Name</span>
+        </div>
+        <input id="inputTeacherName" type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon1">
+        <button type="button" class="btn btn-primary" id="btnCreateTeacher">Create</button>
+    </div>
+</div>
+
+<div id="GroupsContainer">
+    Load...
+</div>
+
+<div id="newGroup" class="d-flex justify-content-center mt-5">
+    <div class="input-group mb-3 w-50">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon2">Name</span>
+        </div>
+        <input id="inputGroupName" type="text" class="form-control" placeholder="Name" aria-label="Name" aria-describedby="basic-addon2">
+        <select class="form-select" id="selectTeacherForGroup"></select>
+        <button type="button" class="btn btn-primary" id="btnCreateGroup">Create</button>
+    </div>
+</div>
+
+<script src="js/HtmlTableGenerator.js"></script>
+
+<script>
+    console.log("Ajax Ready");
+    fetchGetTeachers();
+    fetchGetGroups();
+    fetchGetFreeTeachers()
+    document.querySelector("#btnCreateTeacher").onclick = function () {
+        let newTeacher = {
+            id: 0,
+            name: document.querySelector("#inputTeacherName").value
+        };
+        Create(newTeacher, "api/teachers", fetchGetTeachers)
+        document.querySelector("#inputTeacherName").value = "";
+    }
+    
+    document.querySelector("#btnCreateGroup").onclick = function () {
+        let newGroup = {
+            id: 0,
+            name: document.querySelector("#inputGroupName").value,
+            teacherId: document.querySelector("#selectTeacherForGroup").value
+        };
+        Create(newGroup, "api/groups", fetchGetGroups)
+        document.querySelector("#inputGroupName").value = "";
+    }
+    
+    function renderTeachersList(teachers) {
+        RenderTable(
+                    GetHtmlTable(
+                    {
+                        collection: teachers,
+                        editable: 
+                            {
+                                name: { type: "text" },
+                            },
+                        path: "api/teachers/"
+                    }
+                ), "TeachersContainer");
+    }
+    
+    function renderGroupsList(groups) {
+        RenderTable(
+            GetHtmlTable(
+            {
+                collection: groups,
+                hidden: ["teacherId"],
+                editable: {
+                        name: { type: "text" },
+                        teacherName: { 
+                            type: "dropDown",
+                            source: "api",
+                            path: "/api/teachers/",
+                            defaultValue: "teacherId",
+                            defaultText: "teacherName",
+                            value: "id",
+                            text: "name",
+                            filter: (t => t.group === "No group")
+                        }
+                },
+                path: "api/groups/"
+            }   
+        ), "GroupsContainer");
+    }
+    
+    function fetchGetTeachers() {
+        FetchGetJson("/api/teachers", renderTeachersList);
+    }
+    
+    function fetchGetGroups() {  
+        FetchGetJson("/api/groups", renderGroupsList);
+    }
+    
+    function fetchGetFreeTeachers(teachers) {
+        FetchGetJson("/api/teachers", (collection) => 
+        AddSelectOptions("selectTeacherForGroup", collection.filter(t => t.group === "No group"), "id", "name"));
+    }
+
+    
+    function AddSelectOptions(selectId ,collection, value, text)
+    {
+        console.log(collection)
+        let select = document.querySelector("#" + selectId)
+        for (const item of collection) {
+            let option = document.createElement("option");
+            option.value = item[value];
+            option.innerText = item[text];
+            select.append(option);
+        }
+    }
+    
+   
+</script>

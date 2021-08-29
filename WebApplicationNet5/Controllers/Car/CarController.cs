@@ -26,19 +26,13 @@ namespace WebApplicationNet5.Controllers.Car
         // GET: Car/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var car = await _context.Cars
                 .Include(c => c.Drivetrain)
                 .Include(c => c.Model)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
-            {
-                return NotFound();
-            }
+            if (car == null) return NotFound();
 
             return View(car);
         }
@@ -64,6 +58,7 @@ namespace WebApplicationNet5.Controllers.Car
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["DrivetrainId"] = new SelectList(_context.Drivetrains, "Id", "Name", car.DrivetrainId);
             ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name", car.ModelId);
             return View(car);
@@ -72,16 +67,10 @@ namespace WebApplicationNet5.Controllers.Car
         // GET: Car/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var car = await _context.Cars.FindAsync(id);
-            if (car == null)
-            {
-                return NotFound();
-            }
+            if (car == null) return NotFound();
             ViewData["DrivetrainId"] = new SelectList(_context.Drivetrains, "Id", "Name", car.DrivetrainId);
             ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name", car.ModelId);
             return View(car);
@@ -94,10 +83,7 @@ namespace WebApplicationNet5.Controllers.Car
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,DrivetrainId,ModelId")] Entities.Car.Car car)
         {
-            if (id != car.Id)
-            {
-                return NotFound();
-            }
+            if (id != car.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -109,16 +95,13 @@ namespace WebApplicationNet5.Controllers.Car
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CarExists(car.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["DrivetrainId"] = new SelectList(_context.Drivetrains, "Id", "Name", car.DrivetrainId);
             ViewData["ModelId"] = new SelectList(_context.Models, "Id", "Name", car.ModelId);
             return View(car);
@@ -127,25 +110,20 @@ namespace WebApplicationNet5.Controllers.Car
         // GET: Car/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var car = await _context.Cars
                 .Include(c => c.Drivetrain)
                 .Include(c => c.Model)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (car == null)
-            {
-                return NotFound();
-            }
+            if (car == null) return NotFound();
 
             return View(car);
         }
 
         // POST: Car/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationNet5.Data;
 using WebApplicationNet5.Entities.Post;
@@ -28,17 +25,11 @@ namespace WebApplicationNet5.Controllers
         // GET: Category/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
 
             return View(category);
         }
@@ -62,22 +53,17 @@ namespace WebApplicationNet5.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(category);
         }
 
         // GET: Category/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var category = await _context.Categories.FindAsync(id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
             return View(category);
         }
 
@@ -88,10 +74,7 @@ namespace WebApplicationNet5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug")] Category category)
         {
-            if (id != category.Id)
-            {
-                return NotFound();
-            }
+            if (id != category.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +86,31 @@ namespace WebApplicationNet5.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!CategoryExists(category.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(category);
         }
 
         // GET: Category/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var category = await _context.Categories
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (category == null)
-            {
-                return NotFound();
-            }
+            if (category == null) return NotFound();
 
             return View(category);
         }
 
         // POST: Category/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

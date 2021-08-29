@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -29,18 +27,12 @@ namespace WebApplicationNet5.Controllers
         // GET: Product/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var product = await _context.Products
                 .Include(p => p.Vendor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
 
             return View(product);
         }
@@ -65,6 +57,7 @@ namespace WebApplicationNet5.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["VendorId"] = new SelectList(_context.Vendors, "Id", "Name", product.VendorId);
             return View(product);
         }
@@ -72,16 +65,10 @@ namespace WebApplicationNet5.Controllers
         // GET: Product/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var product = await _context.Products.FindAsync(id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
             ViewData["VendorId"] = new SelectList(_context.Vendors, "Id", "Name", product.VendorId);
             return View(product);
         }
@@ -93,10 +80,7 @@ namespace WebApplicationNet5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,VendorId")] Product product)
         {
-            if (id != product.Id)
-            {
-                return NotFound();
-            }
+            if (id != product.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -108,16 +92,13 @@ namespace WebApplicationNet5.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!ProductExists(product.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             ViewData["VendorId"] = new SelectList(_context.Vendors, "Id", "Id", product.VendorId);
             return View(product);
         }
@@ -125,24 +106,19 @@ namespace WebApplicationNet5.Controllers
         // GET: Product/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var product = await _context.Products
                 .Include(p => p.Vendor)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
+            if (product == null) return NotFound();
 
             return View(product);
         }
 
         // POST: Product/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

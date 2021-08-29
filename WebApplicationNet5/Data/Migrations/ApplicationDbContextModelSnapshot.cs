@@ -214,17 +214,17 @@ namespace WebApplicationNet5.Data.Migrations
 
             modelBuilder.Entity("PostTag", b =>
                 {
-                    b.Property<int>("PostId")
+                    b.Property<int>("PostsId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("TagsId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("PostId", "TagsId");
+                    b.HasKey("PostsId", "TagsId");
 
                     b.HasIndex("TagsId");
 
-                    b.ToTable("PostTag");
+                    b.ToTable("PivotProductTag");
                 });
 
             modelBuilder.Entity("WebApplicationNet5.Entities.Car.Car", b =>
@@ -277,6 +277,25 @@ namespace WebApplicationNet5.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Models");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.Catalog.Catalog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ParentCatalogId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentCatalogId");
+
+                    b.ToTable("Catalogs");
                 });
 
             modelBuilder.Entity("WebApplicationNet5.Entities.Post.Category", b =>
@@ -368,6 +387,59 @@ namespace WebApplicationNet5.Data.Migrations
                     b.ToTable("Vendors");
                 });
 
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Group", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeacherId")
+                        .IsUnique();
+
+                    b.ToTable("Groups");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Student", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("GroupId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("GroupId");
+
+                    b.ToTable("Students");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Teacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teachers");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -423,7 +495,7 @@ namespace WebApplicationNet5.Data.Migrations
                 {
                     b.HasOne("WebApplicationNet5.Entities.Post.Post", null)
                         .WithMany()
-                        .HasForeignKey("PostId")
+                        .HasForeignKey("PostsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -453,6 +525,15 @@ namespace WebApplicationNet5.Data.Migrations
                     b.Navigation("Model");
                 });
 
+            modelBuilder.Entity("WebApplicationNet5.Entities.Catalog.Catalog", b =>
+                {
+                    b.HasOne("WebApplicationNet5.Entities.Catalog.Catalog", "ParentCatalog")
+                        .WithMany()
+                        .HasForeignKey("ParentCatalogId");
+
+                    b.Navigation("ParentCatalog");
+                });
+
             modelBuilder.Entity("WebApplicationNet5.Entities.Post.Post", b =>
                 {
                     b.HasOne("WebApplicationNet5.Entities.Post.Category", "Category")
@@ -473,6 +554,28 @@ namespace WebApplicationNet5.Data.Migrations
                     b.Navigation("Vendor");
                 });
 
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Group", b =>
+                {
+                    b.HasOne("WebApplicationNet5.Entities.School.Teacher", "Teacher")
+                        .WithOne("Group")
+                        .HasForeignKey("WebApplicationNet5.Entities.School.Group", "TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Teacher");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Student", b =>
+                {
+                    b.HasOne("WebApplicationNet5.Entities.School.Group", "Group")
+                        .WithMany("Students")
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+                });
+
             modelBuilder.Entity("WebApplicationNet5.Entities.Post.Category", b =>
                 {
                     b.Navigation("Posts");
@@ -481,6 +584,16 @@ namespace WebApplicationNet5.Data.Migrations
             modelBuilder.Entity("WebApplicationNet5.Entities.Product.Vendor", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Group", b =>
+                {
+                    b.Navigation("Students");
+                });
+
+            modelBuilder.Entity("WebApplicationNet5.Entities.School.Teacher", b =>
+                {
+                    b.Navigation("Group");
                 });
 #pragma warning restore 612, 618
         }

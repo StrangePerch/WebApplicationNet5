@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationNet5.Data;
 using WebApplicationNet5.Entities.Car;
@@ -28,17 +25,11 @@ namespace WebApplicationNet5.Controllers.Car
         // GET: Drivetrain/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var drivetrain = await _context.Drivetrains
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (drivetrain == null)
-            {
-                return NotFound();
-            }
+            if (drivetrain == null) return NotFound();
 
             return View(drivetrain);
         }
@@ -62,22 +53,17 @@ namespace WebApplicationNet5.Controllers.Car
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(drivetrain);
         }
 
         // GET: Drivetrain/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var drivetrain = await _context.Drivetrains.FindAsync(id);
-            if (drivetrain == null)
-            {
-                return NotFound();
-            }
+            if (drivetrain == null) return NotFound();
             return View(drivetrain);
         }
 
@@ -88,10 +74,7 @@ namespace WebApplicationNet5.Controllers.Car
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Drivetrain drivetrain)
         {
-            if (id != drivetrain.Id)
-            {
-                return NotFound();
-            }
+            if (id != drivetrain.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +86,31 @@ namespace WebApplicationNet5.Controllers.Car
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!DrivetrainExists(drivetrain.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(drivetrain);
         }
 
         // GET: Drivetrain/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var drivetrain = await _context.Drivetrains
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (drivetrain == null)
-            {
-                return NotFound();
-            }
+            if (drivetrain == null) return NotFound();
 
             return View(drivetrain);
         }
 
         // POST: Drivetrain/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

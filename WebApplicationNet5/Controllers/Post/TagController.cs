@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -28,17 +26,11 @@ namespace WebApplicationNet5.Controllers
         // GET: Tag/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var tag = await _context.Tags
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
+            if (tag == null) return NotFound();
 
             return View(tag);
         }
@@ -46,6 +38,7 @@ namespace WebApplicationNet5.Controllers
         // GET: Tag/Create
         public IActionResult Create()
         {
+            ViewData["ProductsIds"] = new SelectList(_context.Posts, "Id", "Name");
             return View();
         }
 
@@ -62,22 +55,17 @@ namespace WebApplicationNet5.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(tag);
         }
 
         // GET: Tag/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var tag = await _context.Tags.FindAsync(id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
+            if (tag == null) return NotFound();
             return View(tag);
         }
 
@@ -88,10 +76,7 @@ namespace WebApplicationNet5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Slug")] Tag tag)
         {
-            if (id != tag.Id)
-            {
-                return NotFound();
-            }
+            if (id != tag.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +88,31 @@ namespace WebApplicationNet5.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!TagExists(tag.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(tag);
         }
 
         // GET: Tag/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var tag = await _context.Tags
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (tag == null)
-            {
-                return NotFound();
-            }
+            if (tag == null) return NotFound();
 
             return View(tag);
         }
 
         // POST: Tag/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

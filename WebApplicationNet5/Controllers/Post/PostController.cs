@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -30,18 +28,13 @@ namespace WebApplicationNet5.Controllers
         // GET: Post/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var post = await _context.Posts
                 .Include(m => m.Category)
+                .Include(p => p.Tags)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            if (post == null) return NotFound();
 
             return View(post);
         }
@@ -49,6 +42,7 @@ namespace WebApplicationNet5.Controllers
         // GET: Post/Create
         public IActionResult Create()
         {
+            ViewBag.Tags = new SelectList(_context.Tags, "Id", "Name");
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name");
             return View();
         }
@@ -59,11 +53,12 @@ namespace WebApplicationNet5.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         // ReSharper disable once InconsistentNaming
-        public async Task<IActionResult> Create([Bind("Id,Title,Slug")] Post post, int Category)
+        public async Task<IActionResult> Create([Bind("Id,Title,Slug")] Post post, int Category, int[] Tags)
         {
             if (!ModelState.IsValid) return View(post);
 
             post.Category = await _context.Categories.FindAsync(Category);
+            post.Tags = _context.Tags.Where(t => Tags.Contains(t.Id)).ToList();
             _context.Attach(post.Category);
             _context.Add(post);
             await _context.SaveChangesAsync();
@@ -73,21 +68,18 @@ namespace WebApplicationNet5.Controllers
         // GET: Post/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var post = await _context.Posts
                 .Include(m => m.Category)
+                .Include(m => m.Tags)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
-            
+            if (post == null) return NotFound();
+
             ViewBag.Categories = new SelectList(_context.Categories, "Id", "Name", post.Category.Id);
-            
+            ViewBag.Tags = new MultiSelectList(_context.Tags, "Id", "Name", post.Tags.Select(t => t.Id).ToList());
+            ViewBag.PostTags = post.Tags;
+
             return View(post);
         }
 
@@ -96,31 +88,24 @@ namespace WebApplicationNet5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Slug")] Post post, int Category)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Slug")] Post post, int Category, int[] Tags)
         {
-            if (id != post.Id)
-            {
-                return NotFound();
-            }
+            if (id != post.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
                 try
                 {
                     post.Category = await _context.Categories.FindAsync(Category);
+                    post.Tags = _context.Tags.Where(t => Tags.Contains(t.Id)).ToList();
                     _context.Update(post);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!PostExists(post.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
 
                 return RedirectToAction(nameof(Index));
@@ -132,23 +117,18 @@ namespace WebApplicationNet5.Controllers
         // GET: Post/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var post = await _context.Posts
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            if (post == null) return NotFound();
 
             return View(post);
         }
 
         // POST: Post/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

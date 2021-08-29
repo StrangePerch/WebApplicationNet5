@@ -1,9 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using WebApplicationNet5.Data;
 using WebApplicationNet5.Entities.Product;
@@ -28,17 +25,11 @@ namespace WebApplicationNet5.Controllers
         // GET: Vendor/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var vendor = await _context.Vendors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vendor == null)
-            {
-                return NotFound();
-            }
+            if (vendor == null) return NotFound();
 
             return View(vendor);
         }
@@ -62,22 +53,17 @@ namespace WebApplicationNet5.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(vendor);
         }
 
         // GET: Vendor/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var vendor = await _context.Vendors.FindAsync(id);
-            if (vendor == null)
-            {
-                return NotFound();
-            }
+            if (vendor == null) return NotFound();
             return View(vendor);
         }
 
@@ -88,10 +74,7 @@ namespace WebApplicationNet5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Vendor vendor)
         {
-            if (id != vendor.Id)
-            {
-                return NotFound();
-            }
+            if (id != vendor.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -103,39 +86,31 @@ namespace WebApplicationNet5.Controllers
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!VendorExists(vendor.Id))
-                    {
                         return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(vendor);
         }
 
         // GET: Vendor/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var vendor = await _context.Vendors
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (vendor == null)
-            {
-                return NotFound();
-            }
+            if (vendor == null) return NotFound();
 
             return View(vendor);
         }
 
         // POST: Vendor/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {

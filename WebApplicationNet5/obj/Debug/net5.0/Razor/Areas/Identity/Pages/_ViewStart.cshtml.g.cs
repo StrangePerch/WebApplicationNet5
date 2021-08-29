@@ -12,7 +12,29 @@ namespace AspNetCore
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.AspNetCore.Mvc.Rendering;
     using Microsoft.AspNetCore.Mvc.ViewFeatures;
+#nullable restore
+#line 1 "C:\Users\Admin\RiderProjects\ASP.NET\WebApplicationNet5\WebApplicationNet5\Areas\Identity\Pages\_ViewImports.cshtml"
+using Microsoft.AspNetCore.Identity;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 2 "C:\Users\Admin\RiderProjects\ASP.NET\WebApplicationNet5\WebApplicationNet5\Areas\Identity\Pages\_ViewImports.cshtml"
+using WebApplicationNet5.Areas.Identity;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 3 "C:\Users\Admin\RiderProjects\ASP.NET\WebApplicationNet5\WebApplicationNet5\Areas\Identity\Pages\_ViewImports.cshtml"
+using WebApplicationNet5.Areas.Identity.Pages;
+
+#line default
+#line hidden
+#nullable disable
     [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"cca359517a3deb58ff7f981d2f530ae639399567", @"/Areas/Identity/Pages/_ViewStart.cshtml")]
+    [global::Microsoft.AspNetCore.Razor.Hosting.RazorSourceChecksumAttribute(@"SHA1", @"682c76a72b6021dc4e4175244bdbbf3087d1eae0", @"/Areas/Identity/Pages/_ViewImports.cshtml")]
     public class Areas_Identity_Pages__ViewStart : global::Microsoft.AspNetCore.Mvc.Razor.RazorPage<dynamic>
     {
         #pragma warning disable 1998

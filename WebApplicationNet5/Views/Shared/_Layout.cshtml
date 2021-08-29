@@ -6,12 +6,13 @@
     <title>@ViewData["Title"] - WebApplicationNet5</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css"/>
+    <script src="https://kit.fontawesome.com/8d5defc982.js" crossorigin="anonymous"></script>
 </head>
 <body>
 <header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">WebApplicationNet5</a>
+            <a class="navbar-brand" asp-area="" asp-controller="Ajax" asp-action="Index">WebApplicationNet5</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -28,6 +29,7 @@
                         <div class="dropdown-menu" aria-labelledby="PostNavbarDropdown">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Post" asp-action="Index">Post</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Category" asp-action="Index">Category</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Tag" asp-action="Index">Tag</a>
                         </div>
                     </li>
                     <li class="nav-item dropdown">
@@ -47,6 +49,19 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Index">Car</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Model" asp-action="Index">Model</a>
                             <a class="nav-link text-dark" asp-area="" asp-controller="Drivetrain" asp-action="Index">Drivetrain</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Catalog" asp-action="Index">Catalog</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="CarNavbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            School
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="CarNavbarDropdown">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Student" asp-action="Index">Student</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Teacher" asp-action="Index">Teacher</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Group" asp-action="Index">Group</a>
                         </div>
                     </li>
                 </ul>
@@ -69,6 +84,6 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
+@await RenderSectionAsync("Scripts", false)
 </body>
 </html>
