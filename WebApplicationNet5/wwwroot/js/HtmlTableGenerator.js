@@ -1,4 +1,12 @@
-﻿function GetHtmlTable(options, fetch) {
+﻿let refresh = function () {
+    document.location.reload();
+}
+
+function setRefresh(callback) {
+    refresh = callback;
+}
+
+function GetHtmlTable(options) {
     let table = CreateElementWithClass("table", "table");
     //Creating table headers by prop names
     let tableHead = document.createElement("thead");
@@ -78,7 +86,7 @@
         let RemoveButton = document.createElement("button");
         RemoveButton.className = "btn btn-danger";
         RemoveButton.append(CreateElementWithClass("i", "fas fa-trash-alt"))
-        RemoveButton.onclick = () => Remove(options.path + item.id, fetch)
+        RemoveButton.onclick = () => Remove(options.path + item.id)
         col.append(RemoveButton)
         //EditButton
         let EditButton = document.createElement("button");
@@ -107,18 +115,18 @@ function CreateElementWithClass(name, className) {
     return el;
 }
 
-function Remove(path, then) {
+function Remove(path) {
     fetch(path, {
         method: 'DELETE'
-    })
-        .then(then)
+        })
+        .then(() => refresh())
         .catch((ex) => { // обрабатываем возможную ошибку
             console.log("Error: " + ex.message);
             console.log("Response: " + ex.response);
         });
 }
 
-function Create(item, path, then) {
+function Create(item, path) {
 
     fetch(path ,
         {
@@ -128,7 +136,7 @@ function Create(item, path, then) {
             },
             body: JSON.stringify(item)
         })
-        .then(then)
+        .then(() => refresh())
         .catch((ex) => {
             console.log("Error: " + ex.message);
             console.log("Response: " + ex.response);
@@ -162,6 +170,7 @@ function Edit(item, button, inputs, path) {
         },
         body: JSON.stringify(item)
         })
+        .then(() => refresh())
         .catch((ex) => { // обрабатываем возможную ошибку
         console.log("Error: " + ex.message);
         console.log("Response: " + ex.response);

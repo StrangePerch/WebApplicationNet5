@@ -59,10 +59,20 @@
 
 <script>
     console.log("Ajax Ready");
-    fetchGetTeachers();
-    fetchGetGroups();
-    fetchGetFreeTeachers()
-    fetchGetStudents()
+    
+    Refresh()
+    
+    function Refresh() {
+        fetchGetTeachers();
+        fetchGetGroups();
+        fetchGetFreeTeachers();
+        fetchGetStudents();
+        renderGroupsSelection();
+        renderTeachersSelection();
+    }
+    
+    setRefresh(Refresh);
+    
     document.querySelector("#btnCreateTeacher").onclick = function () {
         let newTeacher = {
             id: 0,
@@ -103,9 +113,8 @@
                                 name: { type: "text" },
                             },
                         path: "api/teachers/"
-                    }, fetchGetTeachers
+                    }
                 ), "TeachersContainer");
-        AddSelectOptions("selectTeacherForGroup", teachers.filter(t => t.groupName === "No group"), "id", "name");
         console.log("Teachers successfully loaded!");
     }
     
@@ -127,12 +136,11 @@
                             value: "id",
                             text: "name",
                             filter: (t => t.groupName === "No group")
-                        }
+                        },
                 },
                 path: "api/groups/"
-            }, fetchGetGroups 
+            }
         ), "GroupsContainer");
-        AddSelectOptions("selectGroupForStudent", groups, "id", "name");
         console.log("Groups successfully loaded!");
     }
     
@@ -141,6 +149,7 @@
             GetHtmlTable(
             {
                 collection: students,
+                hidden: ["groupName"],
                 renamed: {groupId: "Group"},
                 editable: {
                         name: { type: "text" },
@@ -155,10 +164,20 @@
                         }
                 },
                 path: "api/students/"
-            }, fetchGetStudents  
+            } 
         ), "StudentsContainer");
         console.log("Students successfully loaded!");
     }
+    function renderGroupsSelection() {        
+        FetchGetJson("/api/Groups", 
+        (groups) =>{ AddSelectOptions("selectGroupForStudent", groups, "id", "name") })        
+    }
+    
+    function renderTeachersSelection() {
+        FetchGetJson("/api/Groups", 
+        (teachers) =>{ AddSelectOptions("selectTeacherForGroup", teachers.filter(t => t.groupName === "No group"), "id", "name") })
+    }
+    
     
     function fetchGetTeachers() {
         console.log("Teachers loading...");
@@ -183,14 +202,14 @@
     
     function AddSelectOptions(selectId ,collection, value, text)
     {
-        let select = document.querySelector("#" + selectId)
+        let select = document.querySelector("#" + selectId)        
         select.innerHTML = "";
         for (const item of collection) {
             let option = document.createElement("option");
             option.value = item[value];
             option.innerText = item[text];
             select.append(option);
-        }
+        }        
     }
     
    
