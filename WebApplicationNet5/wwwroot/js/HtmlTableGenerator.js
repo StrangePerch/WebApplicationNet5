@@ -1,4 +1,4 @@
-﻿function GetHtmlTable(options) {
+﻿function GetHtmlTable(options, fetch) {
     let table = CreateElementWithClass("table", "table");
     //Creating table headers by prop names
     let tableHead = document.createElement("thead");
@@ -78,7 +78,7 @@
         let RemoveButton = document.createElement("button");
         RemoveButton.className = "btn btn-danger";
         RemoveButton.append(CreateElementWithClass("i", "fas fa-trash-alt"))
-        RemoveButton.onclick = () => Remove(options.path + item.id)
+        RemoveButton.onclick = () => Remove(options.path + item.id, fetch)
         col.append(RemoveButton)
         //EditButton
         let EditButton = document.createElement("button");
@@ -107,11 +107,11 @@ function CreateElementWithClass(name, className) {
     return el;
 }
 
-function Remove(path) {
+function Remove(path, then) {
     fetch(path, {
         method: 'DELETE'
     })
-        .then(fetchGetTeachers)
+        .then(then)
         .catch((ex) => { // обрабатываем возможную ошибку
             console.log("Error: " + ex.message);
             console.log("Response: " + ex.response);

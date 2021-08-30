@@ -103,7 +103,7 @@
                                 name: { type: "text" },
                             },
                         path: "api/teachers/"
-                    }
+                    }, fetchGetTeachers
                 ), "TeachersContainer");
         AddSelectOptions("selectTeacherForGroup", teachers.filter(t => t.groupName === "No group"), "id", "name");
         console.log("Teachers successfully loaded!");
@@ -130,7 +130,7 @@
                         }
                 },
                 path: "api/groups/"
-            }   
+            }, fetchGetGroups 
         ), "GroupsContainer");
         AddSelectOptions("selectGroupForStudent", groups, "id", "name");
         console.log("Groups successfully loaded!");
@@ -155,7 +155,7 @@
                         }
                 },
                 path: "api/students/"
-            }   
+            }, fetchGetStudents  
         ), "StudentsContainer");
         console.log("Students successfully loaded!");
     }
@@ -184,6 +184,7 @@
     function AddSelectOptions(selectId ,collection, value, text)
     {
         let select = document.querySelector("#" + selectId)
+        select.innerHTML = "";
         for (const item of collection) {
             let option = document.createElement("option");
             option.value = item[value];
