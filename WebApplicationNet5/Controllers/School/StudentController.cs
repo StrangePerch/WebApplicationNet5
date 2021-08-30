@@ -9,7 +9,6 @@ using WebApplicationNet5.Entities.School;
 
 namespace WebApplicationNet5.Controllers.School
 {
-    [Authorize]
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _context;

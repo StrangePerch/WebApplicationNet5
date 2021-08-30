@@ -6,6 +6,15 @@
     let collection = options.collection;
     for (const prop in collection[0]) {
         if (options.hidden !== undefined && options.hidden.includes(prop)) continue;
+        if (options.renamed !== undefined)
+        {
+            let newName = options.renamed[prop];
+            if(newName !== undefined)
+            {
+                tr.append(CreateTh(newName));
+                continue;
+            }
+        }
         tr.append(CreateTh(prop));
     }
     tr.append(CreateTh("Actions"));
@@ -47,7 +56,9 @@
                     FetchGetJson(path,
                         (collection) =>
                         {
-                            for (const collectionElement of collection.filter(editableProp.filter)) {
+                            if(editableProp.filter !== undefined)
+                                collection = collection.filter(editableProp.filter);
+                            for (const collectionElement of collection) {
                                 let option = document.createElement("option");
                                 option.value = collectionElement[editableProp.value];
                                 option.innerText = collectionElement[editableProp.text];
@@ -108,7 +119,6 @@ function Remove(path) {
 }
 
 function Create(item, path, then) {
-    console.log(JSON.stringify(item))
 
     fetch(path ,
         {
@@ -144,8 +154,6 @@ function Edit(item, button, inputs, path) {
         button.firstChild.className = "fas fa-edit";
     }
 
-    console.log(JSON.stringify(item))
-    console.log(path)
     fetch(path, {
         method: 'PUT',
         headers: {
@@ -161,7 +169,13 @@ function Edit(item, button, inputs, path) {
 }
 
 function RenderTable(table, containerId) {
-    let Container = document.querySelector("#" + containerId);
+    let id = "#" + containerId;
+    let Container = document.querySelector(id);
+    if(Container === null)
+    {
+        console.log("Wrong container id: " + id);
+        return;
+    }
     Container.innerHTML = "";
     Container.append(table);
 }

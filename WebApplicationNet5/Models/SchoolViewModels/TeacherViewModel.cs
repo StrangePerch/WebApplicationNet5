@@ -6,13 +6,13 @@ namespace WebApplicationNet5.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Group { get; set; }
+        public string GroupName { get; set; }
 
         public TeacherViewModel FromModel(Teacher model)
         {
             Id = model.Id;
             Name = model.Name;
-            Group = model.Group != null ? model.Group.Name : "No group";
+            GroupName = model.Group != null ? model.Group.Name : "No group";
             return this;
         }
         

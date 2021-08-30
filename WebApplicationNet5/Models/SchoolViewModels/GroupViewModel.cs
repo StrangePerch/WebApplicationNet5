@@ -26,7 +26,7 @@ namespace WebApplicationNet5.Models
         {
             model.Id = Id;
             model.Name = Name;
-            model.TeacherId = int.Parse(TeacherName);
+            model.TeacherId = TeacherId;
         }
 
         public Group ToModel()
